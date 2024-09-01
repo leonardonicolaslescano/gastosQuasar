@@ -4,7 +4,7 @@
     :style="$q.screen.lt.sm ? 'width: 420px' : 'width: 800px'"
   >
     <div key="titulo" class="text-h5 q-my-md">Presupuestos</div>
-    <div :style="$q.screen.lt.sm ? 'max-width: 380px' : 'width: 800px'">
+    <div :style="$q.screen.lt.sm ? 'max-width: 90vw' : 'width: 800px'">
       <q-tabs
         class="text-grey-5 shadow-1"
         v-model="tab"
@@ -29,6 +29,7 @@
         class="bg-secondary shadow-1 q-ma-none q-pa-none"
         v-model="tab"
         animated
+        :style="$q.screen.lt.sm ? 'max-width: 90vw' : 'width: 800px'"
       >
         <q-tab-panel
           v-if="presupuestoActual.activo"

@@ -163,8 +163,8 @@
       <!-- DIALOGO CONFIRMAR EDITAR -->
       <q-dialog v-model="confirmEdit" persistent backdrop-filter="blur(4px)">
         <q-card>
-          <q-card-section class="row items-center">
-            <div class="row q-gutter-xs">
+          <q-card-section class="row no-wrap items-center">
+            <div class="row no-wrap q-gutter-xs">
               <div class=".col" height="100px">
                 <q-btn
                   padding="none 20px "

@@ -1,8 +1,8 @@
 <template>
-  <div class="column items-center q-gutter-md q-px-md">
-    <div id="Filtro" class="column">
-      <div key="titulo" class="text-h4 q-my-md">Listado de gastos</div>
-      <div key="Campos" class="row text-caption q-gutter-sm q-px-md">
+  <div class="column items-center q-gutter-sm q-px-none q-mx-none">
+    <div id="Filtro" class="column items-center q-mx-none q-px-none">
+      <div key="titulo" class="text-h4 q-ma-md">Listado de gastos</div>
+      <div key="Campos" class="row text-caption q-gutter-sm q-px-sm q-mx-none">
         <div class="column no-wrap">
           <div>Desde</div>
           <div>
@@ -64,7 +64,7 @@
         label-style="font-size: 1.1em"
       />
     </div>
-    <div id="Tabla" v-if="listaFiltrada">
+    <div id="Tabla" class="q-mx-none q-px-none" v-if="listaFiltrada">
       <CardAnalisisGastos
         class="q-my-md"
         v-for="itemMesAño in listaFiltrada"

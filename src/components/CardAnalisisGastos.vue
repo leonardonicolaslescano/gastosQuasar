@@ -1,19 +1,24 @@
 <template>
   <div>
-    <q-card :style="$q.screen.lt.sm ? 'width:380px' : 'width:600px'">
+    <q-card :style="$q.screen.lt.sm ? 'width:90vw' : 'width:600px'">
       <!-- Encabezado, muestra el Mes, año y el monto total gastado -->
-      <q-card-section id="Header">
-        <div class="row q-gutter-sm items-center">
-          <div class="q-table__title text-h5">
+      <q-card-section id="Header" class="q-px-none">
+        <div
+          class="row no-wrap q-gutter-sm q-px-none q-ml-sm items-center"
+          style="width: 100%"
+        >
+          <div class="q-table__title text-h6">
             {{ mes }}
           </div>
-          <div class="q-table__title">
+          <div class="q-table__title text-h6">
             {{ año }}
           </div>
           <q-space />
-          <div class="column items-end q-mr-lg">
+          <div class="column items-end q-px-none q-mx-lg">
             <div class="text-caption">Total</div>
-            <div class="q-table__title">${{ total.toFixed(2) }}</div>
+            <div class="q-table__title text-subtitle1">
+              ${{ total.toFixed(2) }}
+            </div>
           </div>
         </div>
       </q-card-section>
@@ -40,12 +45,12 @@
             </q-tabs>
           </q-card-section>
           <!-- TABLAS -->
-          <q-card-section id="Tablas">
+          <q-card-section id="Tablas" class="q-px-xs">
             <q-tab-panels v-model="tab" animated>
               <!-- Tabla GENERAL de gastos del mes -->
-              <q-tab-panel name="general" class="q-pa-xs">
+              <q-tab-panel name="general" class="q-pa-xs q-mx-none">
                 <q-table
-                  :style="$q.screen.lt.sm ? 'width:340px' : 'max-width:560px'"
+                  :style="$q.screen.lt.sm ? 'width: 85vw' : 'max-width:90vw'"
                   title="General"
                   :rows="listaGastos"
                   :columns="columns"
@@ -59,6 +64,7 @@
               <!-- Tabla CATEGORIAS, muestra gastos agrupados por categorias -->
               <q-tab-panel name="categorias" class="q-pa-xs">
                 <q-table
+                  :style="$q.screen.lt.sm ? 'width: 85vw' : 'max-width:90vw'"
                   title="Categorias"
                   :rows="listaCategoriasAgrupadas"
                   :columns="columnsCategoria"
@@ -114,9 +120,7 @@
                         <div class="text-left">
                           <q-table
                             :style="
-                              $q.screen.lt.sm
-                                ? 'width:310px'
-                                : 'max-width:560px'
+                              $q.screen.lt.sm ? 'width:77vw' : 'max-width:560px'
                             "
                             dense
                             :rows="props.row.listaGastosDeCategoria"

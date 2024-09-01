@@ -1,5 +1,5 @@
 <template>
-  <div class="column q-px-lg items-center">
+  <div class="column q-px-md items-center">
     <!-- FORMULARIO NUEVO GASTO: dentro de un componente de transition para que se oculte al ver listado de gastos -->
     <q-slide-transition :duration="1000">
       <!-- DIV contenedor usado solo para que se oculte el contenido con efecto de transición -->
@@ -113,7 +113,7 @@
     <q-slide-transition :duration="1000">
       <!-- DIV contenedor usado solo para que se oculte el contenido con el efecto de transición -->
       <div key="listaGastos" v-if="!visibleDiv">
-        <div class="q-py-md" style="max-width: 800px; min-width: 200px">
+        <div class="q-py-md" style="max-width: 90vw">
           <!-- LISTA DE GASTOS: Componente lista dentro de un DIV que define las dimensiones -->
           <q-list separator class="rounded-borders">
             <q-item-label header>Gastos del mes</q-item-label>
@@ -123,14 +123,20 @@
               :key="index"
               :data-id="gasto.id"
               clickable
+              class="q-px-xs"
             >
               <!-- Campos de la lista -->
-              <div class="row no-wrap q-gutter-sm justify-center items-center">
+              <div
+                class="row no-wrap q-px-none q-gutter-sm justify-center items-center"
+                style="max-width: 90vw"
+              >
                 <!-- Campo fecha -->
                 <div>{{ gasto.fecha }}</div>
                 <q-separator vertical />
                 <!-- Campo importe -->
-                <div style="width: 100px">${{ gasto.importe }}</div>
+                <div style="min-width: 90px; max-width: 200px">
+                  ${{ gasto.importe }}
+                </div>
                 <q-space />
                 <q-separator vertical />
                 <!-- Campo icono de la categoria-->
@@ -157,7 +163,7 @@
                 </div>
                 <q-separator vertical />
                 <!-- Campo descripción, se oculta en pantallas pequeñas -->
-                <div class="gt-xs" style="width: 150px">
+                <div class="gt-xs" style="width: 300px">
                   {{ gasto.descripcion }}
                 </div>
                 <q-separator class="gt-xs" vertical />
@@ -238,6 +244,7 @@
                 </q-item-section>
               </div>
             </q-item>
+            <!-- Dialog Delete -->
             <q-dialog
               v-model="dialogDelete"
               persistent
@@ -283,6 +290,7 @@
                 </q-card-actions>
               </q-card>
             </q-dialog>
+            <!-- Dialog Edit -->
             <q-dialog
               v-model="dialogEdit"
               persistent
