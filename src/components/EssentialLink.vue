@@ -58,6 +58,12 @@ links.push(
     caption: "Asignación de presupuestos",
     icon: "tune",
     url: "/Presupuestos",
+  },
+  {
+    title: "Presupuestos 2",
+    caption: "Asignación de presupuestos",
+    icon: "tune",
+    url: "/PresupuestosMobile",
   }
 );
 
