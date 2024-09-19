@@ -1,1 +1,43 @@
 // app global css in SCSS form
+.body-container {
+  background-color: #caeef2;
+}
+
+.form-dialog {
+  border-radius: 20px;
+  width: 240px;
+}
+
+.header-form-dialog {
+  background-color: $primary;
+  color: white;
+  font-size: medium;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Sombra */
+  text-align: center;
+}
+
+.field-form-dialog {
+  border: 1px solid #a4a4a4; /* Color del borde */
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra */
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.q-card-section-form-dialog {
+  padding: 8px;
+}
+
+.btn-form-dialog {
+  background-color: $primary;
+  color: white;
+  border-radius: 12px;
+  font-size: small;
+}
+
+.div-indicator-sm {
+  border-radius: 4px;
+  background-color: rgb(236, 235, 235);
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2); /* Sombra */
+  padding: 8px;
+}

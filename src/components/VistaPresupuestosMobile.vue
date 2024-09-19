@@ -1,8 +1,8 @@
 <template>
   <div class="column items-center q-mt-sm" style="width: 100%">
-    <q-card style="width: 90%">
-      <q-card-section>
-        <div class="row no-wrap">
+    <q-card style="width: 95%">
+      <q-card-section class="q-pa-sm q-py-md">
+        <div class="row q-mb-sm no-wrap items-center">
           <div key="izquierda" style="width: 50%">
             <div class="column q-gutter-sm">
               <q-chip size="lg" :ripple="false" color="grey-3">
@@ -42,13 +42,16 @@
                   <div class="q-ml-sm" style="position: absolute; right: -4px">
                     <q-btn color="orange" round size="13px" @click.stop=""
                       >+
-                      <q-popup-proxy
-                        ><q-card
-                          ><div class="column">
-                            <q-card-section>Nuevo ingreso</q-card-section>
+                      <q-popup-proxy class="form-dialog"
+                        ><q-card class="form-dialog" style="border-radius: 16px"
+                          ><div class="column items-strech">
+                            <q-card-section class="header-form-dialog"
+                              >Nuevo ingreso</q-card-section
+                            >
                             <q-separator />
-                            <q-card-section
+                            <q-card-section class="q-card-section-form-dialog"
                               ><q-input
+                                class="field-form-dialog"
                                 v-model="importe"
                                 prefix="$"
                                 mask="#.##"
@@ -56,25 +59,33 @@
                                 reverse-fill-mask
                                 label="Importe"
                             /></q-card-section>
-                            <q-card-section
+                            <q-card-section class="q-card-section-form-dialog"
                               ><q-input
+                                class="field-form-dialog"
                                 v-model="descripcion"
                                 label="Descripción"
                               ></q-input
                             ></q-card-section>
-                            <q-card-section
+                            <q-card-section class="q-card-section-form-dialog"
                               ><q-select
+                                class="field-form-dialog"
                                 v-model="tipo"
                                 :options="tipos"
                                 label="Tipo"
+                                style=""
                               ></q-select
                             ></q-card-section>
                           </div>
                           <q-card-section
-                            ><div class="row items-center">
-                              <q-btn label="Guardar" /><q-btn
+                            ><div class="row justify-center q-gutter-sm">
+                              <q-btn
+                                class="btn-form-dialog"
                                 v-close-popup
                                 label="Cancelar"
+                              />
+                              <q-btn
+                                class="btn-form-dialog"
+                                label="Guardar"
                               /></div></q-card-section></q-card></q-popup-proxy
                     ></q-btn>
                   </div>
@@ -92,7 +103,7 @@
                   :thickness="0.22"
                   color="orange"
                   track-color="grey-3"
-                  class="q-ma-md"
+                  class="q-ma-sm"
                   show-value
                   font-size="12px"
                 >
@@ -169,6 +180,56 @@
             </div>
           </div>
         </q-slide-transition>
+      </q-card-section>
+    </q-card>
+    <q-card class="q-pa-none q-ma-none q-my-sm" style="width: 95%">
+      <q-card-section class="q-px-xs q-py-none">
+        <div class="row no-wrap">
+          <div style="width: 50%">
+            <div class="column justify-center">
+              <q-chip
+                size="lg"
+                class="q-pa-sm q-my-md"
+                style="position: relative; border: 1px solid #ccc"
+                outline
+                :clickable="false"
+                :ripple="false"
+              >
+                <div
+                  class="row q-ma-none q-pa-none no-wrap items-center"
+                  style="width: 100%"
+                >
+                  <div class="column q-mx-xs">
+                    <div class="q-mb-xs" style="font-size: 16px">
+                      Asignaciones
+                    </div>
+                  </div>
+                  <div class="q-ml-sm" style="position: absolute; right: -4px">
+                    <q-btn color="orange" round size="13px" @click.stop=""
+                      >+
+                    </q-btn>
+                  </div>
+                </div>
+              </q-chip>
+            </div>
+          </div>
+          <div
+            class="row justify-evenly items-center no-wrap q-ma-none"
+            style="width: 50%"
+          >
+            <div class="div-indicator-sm column q-ml-xs" style="width: 100%">
+              <div style="font-size: 9px">Asignado</div>
+              <div style="font-size: 10px">$2000,00</div>
+            </div>
+            <div
+              class="div-indicator-sm column q-ma-none q-ml-sm q-mr-xs"
+              style="width: 100%"
+            >
+              <div style="font-size: 9px">Sin asignar</div>
+              <div style="font-size: 10px">$2000000,00</div>
+            </div>
+          </div>
+        </div>
       </q-card-section>
     </q-card>
   </div>

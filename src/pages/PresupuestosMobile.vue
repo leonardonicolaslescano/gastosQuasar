@@ -1,5 +1,5 @@
 <template>
-  <q-page class="column items-center">
+  <q-page class="column items-center body-container">
     <VistaPresupuestosMobile />
   </q-page>
 </template>
