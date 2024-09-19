@@ -182,7 +182,11 @@
         </q-slide-transition>
       </q-card-section>
     </q-card>
-    <q-card class="q-pa-none q-ma-none q-my-sm" style="width: 95%">
+    <q-card
+      id="headAsignaciones"
+      class="vertical-top q-pa-none q-ma-none q-mt-sm"
+      style="width: 95%; position: sticky; top: 120px; z-index: 1000"
+    >
       <q-card-section class="q-px-xs q-py-none">
         <div class="row no-wrap">
           <div style="width: 50%">
@@ -232,11 +236,20 @@
         </div>
       </q-card-section>
     </q-card>
+    <div style="width: 95%">
+      <CardAsignacionesMobile class="q-pa-none q-ma-none q-my-sm" />
+      <CardAsignacionesMobile class="q-pa-none q-ma-none q-my-sm" />
+      <CardAsignacionesMobile class="q-pa-none q-ma-none q-my-sm" />
+      <CardAsignacionesMobile class="q-pa-none q-ma-none q-my-sm" />
+      <CardAsignacionesMobile class="q-pa-none q-ma-none q-my-sm" />
+      <CardAsignacionesMobile class="q-pa-none q-ma-none q-my-sm" />
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref, computed, watch } from "vue";
+import CardAsignacionesMobile from "../components/CardAsignacionesMobile.vue";
 
 //para prueba de esquema
 const value = ref(30);
