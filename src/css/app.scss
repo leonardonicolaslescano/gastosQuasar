@@ -1,4 +1,29 @@
 // app global css in SCSS form
+div::-webkit-scrollbar {
+  width: 8px; /* Ancho de la barra de desplazamiento */
+}
+
+div::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Color del fondo de la barra */
+  border-radius: 8px;
+}
+
+div::-webkit-scrollbar-thumb {
+  background-color: #888; /* Color de la barra */
+  border-radius: 8px;
+  border: 2px solid #f1f1f1; /* Espacio alrededor de la barra */
+}
+
+div::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Color de la barra al pasar el ratón */
+}
+
+/* Estilos para Firefox */
+div {
+  scrollbar-width: thin; /* Ancho de la barra de desplazamiento */
+  scrollbar-color: #888 #f1f1f1; /* Color de la barra y del fondo */
+}
+
 .body-container {
   background-color: #caeef2;
 }
@@ -44,4 +69,25 @@
 
 .chip-categoria-asignacion {
   margin: 3px;
+}
+
+.chip-field-status {
+  padding: 10px;
+  width: 95px;
+}
+
+@media (min-width: 1px) {
+  .card-asignaciones {
+    width: 100%;
+  }
+}
+@media (min-width: 695px) {
+  .card-asignaciones {
+    width: 49.5%;
+  }
+}
+@media (min-width: 1040px) {
+  .card-asignaciones {
+    width: 33%;
+  }
 }

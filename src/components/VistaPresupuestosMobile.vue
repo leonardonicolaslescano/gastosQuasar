@@ -236,13 +236,26 @@
         </div>
       </q-card-section>
     </q-card>
-    <div style="width: 95%">
-      <CardAsignacionesMobile class="q-pa-none q-ma-none q-my-sm" />
-      <CardAsignacionesMobile class="q-pa-none q-ma-none q-my-sm" />
-      <CardAsignacionesMobile class="q-pa-none q-ma-none q-my-sm" />
-      <CardAsignacionesMobile class="q-pa-none q-ma-none q-my-sm" />
-      <CardAsignacionesMobile class="q-pa-none q-ma-none q-my-sm" />
-      <CardAsignacionesMobile class="q-pa-none q-ma-none q-my-sm" />
+    <div class="row justify-between" style="width: 95%; max-width: 1200px">
+      <CardAsignacionesMobile
+        class="card-asignaciones q-pa-none q-ma-none q-my-sm"
+      />
+      <CardAsignacionesMobile
+        class="card-asignaciones q-pa-none q-ma-none q-my-sm"
+      />
+      <CardAsignacionesMobile
+        class="col-xs-12 col-sm-6 col-md-4 col-lg-3 q-pa-none q-ma-none q-my-sm"
+      />
+      <CardAsignacionesMobile
+        class="col-xs-12 col-sm-6 col-md-4 col-lg-3 q-pa-none q-ma-none q-my-sm"
+      />
+      <CardAsignacionesMobile
+        class="col-xs-12 col-sm-6 col-md-4 col-lg-3 q-pa-none q-ma-none q-my-sm"
+      />
+      <CardAsignacionesMobile
+        class="col-6 q-pa-none q-ma-none q-my-sm"
+        style="max-width: 380px; min-width: 325px"
+      />
     </div>
   </div>
 </template>

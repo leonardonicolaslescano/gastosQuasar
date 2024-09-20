@@ -2,21 +2,23 @@
   <q-card>
     <q-card-section class="q-px-sm q-pt-sm q-pb-none">
       <div class="row no-wrap">
-        <div class="column no-wrap items-center q-pa-xs">
-          <div class="q-pa-none q-ma-none" style="font-size: 13px">Viveres</div>
+        <div
+          class="column no-wrap items-center justify-center q-pa-none q-pl-xs"
+        >
+          <div class="q-pa-none q-ma-none" style="font-size: 14px">Viveres</div>
           <div>
             <q-circular-progress
               :value="value"
-              size="80px"
-              :thickness="0.22"
+              size="100px"
+              :thickness="0.15"
               color="orange"
               track-color="grey-3"
               class="q-ma-xs q-pa-none"
               show-value
             >
               <div class="column no-wrap items-center">
-                <div class="q-mb-xs" style="font-size: 7px">Consumido</div>
-                <div class="q-mb-sm" style="font-size: 9px">
+                <div class="q-mb-sm" style="font-size: 10px">Consumido</div>
+                <div class="q-mb-sm" style="font-size: 12px">
                   ${{ totalConsumido }}
                 </div>
               </div>
@@ -27,44 +29,44 @@
           <div class="row no-wrap">
             <div>
               <q-chip
-                class="q-pa-md q-ma-xs"
+                class="chip-field-status q-mr-xs"
                 size="lg"
                 :ripple="false"
                 color="grey-3"
-                style="width: 100px"
+                style="width: 95px"
               >
                 <div class="column">
-                  <div style="font-size: 7px">Restante</div>
-                  <div style="font-size: 10px">$800000,00</div>
+                  <div style="font-size: 10px">Restante</div>
+                  <div style="font-size: 12px">$8000000,00</div>
                 </div>
               </q-chip>
             </div>
             <div>
               <q-chip
-                style="width: 100px"
-                class="q-pa-md"
+                style="width: 95px"
+                class="chip-field-status q-ml-none"
                 size="lg"
                 :ripple="false"
                 color="grey-3"
               >
                 <div class="column">
-                  <div style="font-size: 7px">Asignado</div>
-                  <div style="font-size: 10px">$800000,00</div>
+                  <div style="font-size: 10px">Asignado</div>
+                  <div style="font-size: 12px">$8000000,00</div>
                 </div>
               </q-chip>
             </div>
           </div>
           <div class="column no-wrap q-ma-xs">
-            <div class="q-ml-sm q-mt-xs" style="font-size: 10px">
+            <div class="q-ml-sm q-mt-sm" style="font-size: 12px">
               Categorias
             </div>
-            <div class="row">
+            <div class="row" style="max-height: 80px; overflow-y: auto">
               <q-chip
                 class="q-pa-sm chip-categoria-asignacion"
                 size="xs"
                 :ripple="false"
                 color="grey-3"
-                style="font-size: 9px"
+                style="font-size: 10px"
               >
                 Supermercado
               </q-chip>
@@ -73,52 +75,16 @@
                 size="xs"
                 :ripple="false"
                 color="grey-3"
-                style="font-size: 9px"
+                style="font-size: 10px"
               >
                 Despensa
-              </q-chip>
-              <q-chip
-                class="q-pa-sm chip-categoria-asignacion"
-                size="xs"
-                :ripple="false"
-                color="grey-3"
-                style="font-size: 9px"
-              >
-                Verduleria
-              </q-chip>
-              <q-chip
-                class="q-pa-sm chip-categoria-asignacion"
-                size="xs"
-                :ripple="false"
-                color="grey-3"
-                style="font-size: 9px"
-              >
-                Carnicería
-              </q-chip>
-              <q-chip
-                class="q-pa-sm chip-categoria-asignacion"
-                size="xs"
-                :ripple="false"
-                color="grey-3"
-                style="font-size: 9px"
-              >
-                Carnicería
-              </q-chip>
-              <q-chip
-                class="q-pa-sm chip-categoria-asignacion"
-                size="xs"
-                :ripple="false"
-                color="grey-3"
-                style="font-size: 9px"
-              >
-                Carnicería
               </q-chip>
             </div>
           </div>
         </div>
       </div>
     </q-card-section>
-    <q-card-section class="q-pa-none q-ma-none">
+    <q-card-section class="listaGastosXAsignacion q-pa-none q-ma-none q-mt-xs">
       <div class="column no-wrap">
         <q-slide-transition :duration="200">
           <div key="gastosXAsignacion" v-show="tablasVisible">
@@ -205,6 +171,7 @@
               :icon="tablasVisible ? 'expand_less' : 'expand_more'"
               @click="tablasVisible = !tablasVisible"
               no-caps
+              style="font-size: 10px"
               >Gastos</q-btn
             >
           </q-card-actions>
