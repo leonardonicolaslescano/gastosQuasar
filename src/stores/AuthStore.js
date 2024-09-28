@@ -447,8 +447,20 @@ export const useAuthStore = defineStore("authStore", () => {
       );
     }
   };
+  //función para obtener el nombre de catergoria por su id
+  const nombreCategoriaPorId = (id) => {
+    const categoria = categorias.value.find((cat) => cat.id === id);
+    return categoria.nombre;
+  };
+  //Función para obtener el icono de una categoria por su ID
+  const iconoCategoriaPorId = (id) => {
+    const categoria = categorias.value.find((cat) => cat.id === id);
+    return categoria.icon;
+  };
 
   return {
+    nombreCategoriaPorId,
+    iconoCategoriaPorId,
     pruebaValidacionFirebase,
     isLoggedIn,
     uId,

@@ -1,14 +1,17 @@
 <template>
   <q-card>
     <q-card-section class="q-px-sm q-pt-sm q-pb-none">
-      <div class="row no-wrap">
-        <div
-          class="column no-wrap items-center justify-center q-pa-none q-pl-xs"
-        >
-          <div class="q-pa-none q-ma-none" style="font-size: 14px">Viveres</div>
+      <div class="row no-wrap content-stretch">
+        <div class="column no-wrap items-center q-pa-none q-pl-xs">
+          <div
+            class="q-pa-none q-ma-none text-capitalize"
+            style="font-size: 14px"
+          >
+            {{ props.nombre }}
+          </div>
           <div>
             <q-circular-progress
-              :value="value"
+              :value="porcentajeConsumido"
               size="100px"
               :thickness="0.15"
               color="orange"
@@ -19,42 +22,38 @@
               <div class="column no-wrap items-center">
                 <div class="q-mb-sm" style="font-size: 10px">Consumido</div>
                 <div class="q-mb-sm" style="font-size: 12px">
-                  ${{ totalConsumido }}
+                  ${{ props.totalGastos.toFixed(2) }}
                 </div>
               </div>
             </q-circular-progress>
           </div>
         </div>
-        <div class="column no-wrap">
-          <div class="row no-wrap">
-            <div>
-              <q-chip
-                class="chip-field-status q-mr-xs"
-                size="lg"
-                :ripple="false"
-                color="grey-3"
-                style="width: 95px"
-              >
-                <div class="column">
-                  <div style="font-size: 10px">Restante</div>
-                  <div style="font-size: 12px">$8000000,00</div>
+        <div class="column no-wrap" style="width: 100%; max-width: 430px">
+          <div class="row no-wrap justify-between">
+            <q-chip
+              class="chip-field-status q-mr-xs"
+              size="lg"
+              :ripple="false"
+              color="grey-3"
+            >
+              <div class="column">
+                <div style="font-size: 10px">Restante</div>
+                <div style="font-size: 12px">${{ restante.toFixed(2) }}</div>
+              </div>
+            </q-chip>
+            <q-chip
+              class="chip-field-status q-ml-none"
+              size="lg"
+              :ripple="false"
+              color="grey-3"
+            >
+              <div class="column">
+                <div style="font-size: 10px">Asignado</div>
+                <div style="font-size: 12px">
+                  ${{ props.importe.toFixed(2) }}
                 </div>
-              </q-chip>
-            </div>
-            <div>
-              <q-chip
-                style="width: 95px"
-                class="chip-field-status q-ml-none"
-                size="lg"
-                :ripple="false"
-                color="grey-3"
-              >
-                <div class="column">
-                  <div style="font-size: 10px">Asignado</div>
-                  <div style="font-size: 12px">$8000000,00</div>
-                </div>
-              </q-chip>
-            </div>
+              </div>
+            </q-chip>
           </div>
           <div class="column no-wrap q-ma-xs">
             <div class="q-ml-sm q-mt-sm" style="font-size: 12px">
@@ -62,22 +61,15 @@
             </div>
             <div class="row" style="max-height: 80px; overflow-y: auto">
               <q-chip
-                class="q-pa-sm chip-categoria-asignacion"
+                v-for="categoria in categorias"
+                :key="categoria.index"
+                class="q-pa-sm chip-categoria-asignacion text-capitalize"
                 size="xs"
                 :ripple="false"
                 color="grey-3"
                 style="font-size: 10px"
               >
-                Supermercado
-              </q-chip>
-              <q-chip
-                class="q-pa-sm chip-categoria-asignacion"
-                size="xs"
-                :ripple="false"
-                color="grey-3"
-                style="font-size: 10px"
-              >
-                Despensa
+                {{ categoria.nombre }}
               </q-chip>
             </div>
           </div>
@@ -120,13 +112,15 @@
                   ></q-item-section>
                 </q-item>
                 <q-item
-                  v-for="gasto in gastos"
+                  v-for="gasto in props.gastos"
                   :key="gasto.index"
                   style="font-size: 12px; min-height: 25px; max-height: 25px"
                 >
                   <q-item-section
                     style="min-width: 15%; max-width: 20%; font-size: 10px"
-                    >{{ gasto.fecha }}</q-item-section
+                    >{{
+                      date.formatDate(gasto.fecha.toDate(), "DD/MM/YYYY")
+                    }}</q-item-section
                   >
                   <q-item-section
                     style="
@@ -139,9 +133,9 @@
                     >${{ gasto.importe }}</q-item-section
                   >
                   <q-item-section
-                    class="q-pl-sm"
+                    class="q-pl-sm text-capitalize"
                     style="min-width: 15%; max-width: 30%; font-size: 10px"
-                    >{{ gasto.categoria }}</q-item-section
+                    >{{ gasto.categoriaNombre }}</q-item-section
                   >
 
                   <q-item-section
@@ -183,46 +177,34 @@
 
 <script setup>
 import { ref, computed } from "vue";
+import { date } from "quasar";
 
 const value = ref(70);
 const totalConsumido = ref(1000000.22);
 const tablasVisible = ref(false);
-const gastos = ref([
-  {
-    fecha: "01/09/2024",
-    importe: 1000000.22,
-    categoria: "Supermercado",
-    descripcion: "Compras de la 1ra semana",
-  },
-  {
-    fecha: "01/09/2024",
-    importe: 1000000,
-    categoria: "Supermercado",
-    descripcion: "Compras de la 1ra semana",
-  },
-  {
-    fecha: "01/09/2024",
-    importe: 100000,
-    categoria: "Supermercado",
-    descripcion: "Compras de la 1ra semana",
-  },
-  {
-    fecha: "01/09/2024",
-    importe: 100000,
-    categoria: "Supermercado",
-    descripcion: "Compras de la 1ra semana",
-  },
-  {
-    fecha: "01/09/2024",
-    importe: 100000,
-    categoria: "Supermercado",
-    descripcion: "Compras de la 1ra semana",
-  },
-  {
-    fecha: "01/09/2024",
-    importe: 100000,
-    categoria: "Supermercado",
-    descripcion: "Compras de la 1ra semana",
-  },
-]);
+
+const props = defineProps({
+  nombre: String,
+  importe: Number,
+  porcentaje: Number,
+  totalGastos: Number,
+  totalIngresos: Number,
+  categorias: Array,
+  gastos: Array,
+});
+
+const porcentajeConsumido = computed(() => {
+  let total = (props.totalGastos / props.importe) * 100;
+  return Number(total.toFixed(2));
+});
+
+const porcentajeAsignado = computed(() => {
+  let total = (props.importe / props.totalIngresos) * 100;
+  return Number(total.toFixed(2));
+});
+
+const restante = computed(() => {
+  let total = props.importe - props.totalGastos;
+  return total;
+});
 </script>

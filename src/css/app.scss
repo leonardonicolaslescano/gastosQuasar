@@ -73,7 +73,35 @@ div {
 
 .chip-field-status {
   padding: 10px;
-  width: 95px;
+  width: 100%;
+  max-width: 200px;
+}
+
+.tab-presupuesto {
+  background-color: white;
+  border: 1px solid #c9c8c8; /* Color del borde */
+  padding: 2px 16px 2px 16px;
+  margin: 4px;
+  font-size: 12px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.tab-presupuesto-activo {
+  background-color: $primary;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3); /* Sombra */
+  color: white;
+  padding: 10px;
+  margin: 4px;
+  font-size: 12px;
+  border-radius: 12px;
+  padding: 2px 16px 2px 16px;
+  cursor: pointer;
+}
+
+.card-title {
+  background-color: $primary;
+  color: white;
 }
 
 @media (min-width: 1px) {

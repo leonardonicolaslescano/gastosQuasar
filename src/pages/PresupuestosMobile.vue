@@ -5,5 +5,6 @@
 </template>
 
 <script setup>
-import VistaPresupuestosMobile from "../components/VistaPresupuestosMobile.vue";
+import VistaPresupuestosMobile from "src/components/VistaPresupuestosMobile.vue";
+import PanelPresupuestos from "../components/PanelPresupuestos.vue";
 </script>

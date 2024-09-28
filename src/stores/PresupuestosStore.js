@@ -27,6 +27,7 @@ export const usePresupuestosStore = defineStore("presupuestosStore", () => {
   const configStore = useConfigStore();
 
   const listaActualizada = ref(true);
+  const listaActualActualizada = ref(true);
   const presupuestos = ref([]);
   const presupuestoActual = ref({
     activo: false,
@@ -78,6 +79,7 @@ export const usePresupuestosStore = defineStore("presupuestosStore", () => {
   const actualizarPresupuestoActual = async () => {
     try {
       listaActualizada.value = false;
+      listaActualActualizada.value = false;
       await userStore.actualizarGastosDelMes();
 
       const userDocRef = await doc(db, "usuarios", userStore.uId);
@@ -115,6 +117,7 @@ export const usePresupuestosStore = defineStore("presupuestosStore", () => {
           activo: true,
           ...doc.data(),
         }));
+
         //asigno al objeto presupuesto actual del store, el presupuesto obtenido, posición 0 del array ya que es uno solo
         presupuestoActual.value = auxPresu[0];
 
@@ -135,12 +138,24 @@ export const usePresupuestosStore = defineStore("presupuestosStore", () => {
         //Recorro cada asignacion del presupuesto
         presupuestoActual.value.asignaciones.forEach((asignacion) => {
           let auxTotalGastoAsignacion = 0;
+          let auxListaGastos = [];
           //recorro cada categoria de la asignacion
           asignacion.categorias.forEach((categoria) => {
             //recorro cada gasto y me fijo si su categoria corresponde a la categoria de la asignacion para sumar el gasto
             userStore.gastosDelMes.forEach((gasto) => {
               if (gasto.categoriaId === categoria.id) {
                 auxTotalGastoAsignacion += Number(gasto.importe);
+                auxListaGastos.push({
+                  fecha: gasto.fecha,
+                  importe: gasto.importe,
+                  categoriaId: gasto.categoriaId,
+                  categoriaNombre: userStore.nombreCategoriaPorId(
+                    gasto.categoriaId
+                  ),
+                  categoriaIcono: userStore.iconoCategoriaPorId(
+                    gasto.categoriaId
+                  ),
+                });
               }
             });
           });
@@ -150,11 +165,17 @@ export const usePresupuestosStore = defineStore("presupuestosStore", () => {
             importe: Number(asignacion.importe),
             categorias: asignacion.categorias,
             totalGastos: auxTotalGastoAsignacion.toFixed(2),
+            gastos: auxListaGastos.sort((a, b) => {
+              return a.fecha - b.fecha;
+            }),
           });
         });
         presupuestoActual.value.asignaciones = auxAsignaciones;
+      } else {
+        presupuestoActual.value = { activo: false };
       }
       listaActualizada.value = true;
+      listaActualActualizada.value = true;
     } catch (error) {
       showError("Error: ", error.message, "Al actualizar presupuesto actual");
     }
@@ -250,12 +271,24 @@ export const usePresupuestosStore = defineStore("presupuestosStore", () => {
         //Recorro cada asignacion del presupuesto
         presupuesto.asignaciones.forEach((asignacion) => {
           let auxTotalGastoAsignacion = 0;
+          let auxListaGastos = [];
           //recorro cada categoria de la asignacion
           asignacion.categorias.forEach((categoria) => {
             //recorro cada gasto y me fijo si su categoria corresponde a la categoria de la asignacion para sumar el gasto
             auxGastosPeriodo.forEach((gasto) => {
               if (gasto.categoriaId === categoria.id) {
                 auxTotalGastoAsignacion += Number(gasto.importe);
+                auxListaGastos.push({
+                  fecha: gasto.fecha,
+                  importe: gasto.importe,
+                  categoriaId: gasto.categoriaId,
+                  categoriaNombre: userStore.nombreCategoriaPorId(
+                    gasto.categoriaId
+                  ),
+                  categoriaIcono: userStore.iconoCategoriaPorId(
+                    gasto.categoriaId
+                  ),
+                });
               }
             });
           });
@@ -265,6 +298,9 @@ export const usePresupuestosStore = defineStore("presupuestosStore", () => {
             importe: Number(asignacion.importe),
             categorias: asignacion.categorias,
             totalGastos: auxTotalGastoAsignacion.toFixed(2),
+            gastos: auxListaGastos.sort((a, b) => {
+              return a.fecha - b.fecha;
+            }),
           });
         });
         presupuesto.asignaciones = auxAsignaciones;
@@ -284,7 +320,43 @@ export const usePresupuestosStore = defineStore("presupuestosStore", () => {
     }
   };
 
+  const eliminarPresupuesto = async (pFecha) => {
+    try {
+      const mes = pFecha.getMonth();
+      const año = pFecha.getFullYear();
+      const fechaDesde = new Date(año, mes, 1);
+      const fechaHasta = new Date(año, mes + 1, 0);
+
+      const userDocRef = await doc(db, "usuarios", userStore.uId);
+
+      const presupuestosCollection = collection(userDocRef, "presupuestos");
+
+      const q = query(
+        presupuestosCollection,
+        where("fecha", ">=", fechaDesde),
+        where("fecha", "<", fechaHasta)
+      );
+
+      const presupuestoDoc = await getDocs(q);
+      if (!presupuestoDoc.empty) {
+        const presupuestoAModificarDoc = await doc(
+          db,
+          presupuestosCollection.path,
+          presupuestoDoc.docs[0].id
+        );
+        await deleteDoc(presupuestoAModificarDoc);
+        await actualizarPresupuestoActual();
+        await actualizarListaPresupuestos();
+        showSuccess("Presupuesto eliminado correctamente");
+      }
+    } catch (error) {
+      showError("Error: ", error.message, "Al eliminar presupuesto");
+    }
+  };
+
   return {
+    eliminarPresupuesto,
+    listaActualActualizada,
     presupuestoActual,
     agregarPresupuesto,
     presupuestos,
