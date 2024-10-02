@@ -10,7 +10,8 @@
       >
         <q-menu
           ><q-list
-            ><q-item clickable v-close-popup>Editar</q-item
+            ><q-item clickable v-close-popup @click="editar = true"
+              >Editar</q-item
             ><q-item clickable v-close-popup>Duplicar</q-item
             ><q-item clickable
               >Eliminar<q-popup-proxy class="form-dialog"
@@ -37,11 +38,61 @@
         <div class="row q-mb-sm no-wrap items-center">
           <div key="izquierda" style="width: 50%">
             <div class="column q-gutter-sm">
-              <q-chip size="lg" :ripple="false" color="grey-3">
+              <q-chip
+                clickable
+                v-if="editar"
+                size="lg"
+                :ripple="false"
+                outline
+                color="grey-6"
+                text-color="primary"
+              >
+                <div class="column">
+                  <div style="font-size: 9px; color: black">
+                    Fecha de inicio
+                  </div>
+                  <div
+                    class="row no-wrap"
+                    style="font-size: 11px; color: black"
+                  >
+                    <div class="q-mr-sm">{{ mes.nombre }}</div>
+                    <div>{{ año }}</div>
+                  </div>
+                </div>
+                <q-menu
+                  style="
+                    border-radius: 16px;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6); /* Sombra */
+                  "
+                  transition-show
+                  ><q-card class="q-pa-none" style="border-radius: 16px"
+                    ><div class="row items-strech q-pa-sm">
+                      <q-card-section class="q-card-section-form-dialog"
+                        ><q-select
+                          v-if="año"
+                          style="min-width: 70px; font-size: 12px"
+                          label="Mes"
+                          v-model="mes"
+                          :options="meses"
+                          :option-label="(item) => item.nombre"
+                          :option-value="(item) => item.id"
+                        />
+                      </q-card-section>
+                      <q-card-section class="q-card-section-form-dialog"
+                        ><q-select
+                          style="width: 65px; font-size: 12px"
+                          v-model="año"
+                          :options="años"
+                          label="Año"
+                      /></q-card-section>
+                    </div> </q-card
+                ></q-menu>
+              </q-chip>
+              <q-chip v-else size="lg" :ripple="false" color="grey-3">
                 <div class="column">
                   <div style="font-size: 9px">Fecha de inicio</div>
                   <div class="row no-wrap" style="font-size: 11px">
-                    <div class="q-mr-sm">{{ mes }}</div>
+                    <div class="q-mr-sm">{{ mes.nombre }}</div>
                     <div>{{ año }}</div>
                   </div>
                 </div>
@@ -78,7 +129,11 @@
                       ${{ totalIngresos.toFixed(2) }}
                     </div>
                   </div>
-                  <div class="q-ml-sm" style="position: absolute; right: -4px">
+                  <div
+                    v-if="editar"
+                    class="q-ml-sm"
+                    style="position: absolute; right: -4px"
+                  >
                     <q-btn color="orange" round size="13px" @click.stop=""
                       >+
                       <q-popup-proxy class="form-dialog"
@@ -179,6 +234,7 @@
                     >Tipo</q-item-section
                   >
                   <q-item-section
+                    v-if="editar"
                     class="q-ml-sm"
                     side
                     style="width: 40px"
@@ -207,6 +263,7 @@
                     >{{ ingreso.tipo }}</q-item-section
                   >
                   <q-item-section
+                    v-if="editar"
                     class="q-ml-sm"
                     side
                     style="width: 40px; padding: 0"
@@ -247,7 +304,11 @@
                       Asignaciones
                     </div>
                   </div>
-                  <div class="q-ml-sm" style="position: absolute; right: -4px">
+                  <div
+                    v-if="editar"
+                    class="q-ml-sm"
+                    style="position: absolute; right: -4px"
+                  >
                     <q-btn color="orange" round size="13px" @click.stop=""
                       >+
                     </q-btn>
@@ -288,6 +349,29 @@
         :gastos="asignacion.gastos"
       />
     </div>
+    <q-page-sticky v-if="editar" position="bottom" :offset="[0, 18]">
+      <q-btn
+        class="q-mr-sm"
+        unelevated
+        rounded
+        push
+        size="md"
+        color="primary"
+        label="Guardar"
+        style="box-shadow: 0px 6px 14px rgba(0, 0, 0, 0.4)"
+      />
+      <q-btn
+        class="q-ml-sm"
+        unelevated
+        rounded
+        push
+        size="md"
+        color="warning"
+        label="Cancelar"
+        style="box-shadow: 0px 6px 14px rgba(0, 0, 0, 0.4)"
+        @click="editar = false"
+      />
+    </q-page-sticky>
   </div>
 </template>
 
@@ -295,7 +379,9 @@
 import { ref, computed, watch } from "vue";
 import CardAsignacionesMobile from "../components/CardAsignacionesMobile.vue";
 import { usePresupuestosStore } from "src/stores/PresupuestosStore";
+import { useConfigStore } from "src/stores/ConfigStore";
 
+const configStore = useConfigStore();
 const storePresupuestos = usePresupuestosStore();
 const visibleListaIngresos = ref(true);
 const importe = ref(1000.0);
@@ -305,8 +391,8 @@ const tipo = ref();
 ////
 
 const props = defineProps({
-  mes: String,
-  año: Number,
+  pMes: String,
+  pAño: Number,
   fecha: Date,
   totalIngresos: Number,
   totalGastos: Number,
@@ -314,6 +400,8 @@ const props = defineProps({
   asignaciones: Array,
   pEditar: Boolean,
 });
+
+const editar = ref(props.pEditar);
 
 const emit = defineEmits(["presupuestoEliminado"]);
 
@@ -349,9 +437,31 @@ const eliminarPresupuesto = async () => {
   await storePresupuestos.eliminarPresupuesto(props.fecha);
 };
 
-// watch(visibleListaIngresos, () => {
-//   console.log("en visible lista ingresos: " + visibleListaIngresos.value);
-// });
+////REFERIDO A EDITAR PRESUPUESTO
 
-//
+const fechaActual = new Date();
+const años = ref([
+  fechaActual.getFullYear(),
+  fechaActual.getFullYear() + 1,
+  fechaActual.getFullYear() + 2,
+]);
+
+const año = ref(props.pAño);
+const mes = ref(props.pMes);
+
+const meses = computed(() => {
+  var mesesAux = [];
+  var añoAux = año.value;
+  if (añoAux == fechaActual.getFullYear()) {
+    for (var i = fechaActual.getMonth(); i < 12; i++) {
+      mesesAux.push(configStore.meses[i]);
+    }
+  } else {
+    mesesAux = configStore.meses;
+  }
+  return mesesAux;
+});
+watch(año, () => {
+  mes.value = "";
+});
 </script>

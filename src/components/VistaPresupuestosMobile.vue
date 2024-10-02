@@ -49,13 +49,14 @@
         <PanelPresupuestos
           key="panelActual"
           v-if="tab == 'actual' && presupuestoActual.activo"
-          :mes="presupuestoActual.mes.nombre"
-          :año="presupuestoActual.año"
+          :pMes="presupuestoActual.mes"
+          :pAño="presupuestoActual.año"
           :fecha="presupuestoActual.fecha.toDate()"
           :totalIngresos="presupuestoActual.totalIngresos"
           :totalGastos="presupuestoActual.totalGastos"
           :ingresos="presupuestoActual.ingresos"
           :asignaciones="presupuestoActual.asignaciones"
+          :pEditar="presupuestoActual.editar"
           @presupuestoEliminado="reiniciarTab()"
         />
       </transition>
@@ -66,13 +67,14 @@
         >
           <PanelPresupuestos
             v-if="tab == presupuesto.mes.nombre"
-            :mes="presupuesto.mes.nombre"
-            :año="presupuesto.año"
+            :pMes="presupuesto.mes"
+            :pAño="presupuesto.año"
             :fecha="presupuesto.fecha.toDate()"
             :totalIngresos="presupuesto.totalIngresos"
             :totalGastos="presupuesto.totalGastos"
             :ingresos="presupuesto.ingresos"
             :asignaciones="presupuesto.asignaciones"
+            :pEditar="presupuesto.editar"
             @presupuestoEliminado="reiniciarTab()"
           />
         </transition>
