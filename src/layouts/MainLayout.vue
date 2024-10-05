@@ -22,7 +22,7 @@
         {{ emailLogged }}
         <q-btn class="q-ml-md" v-if="isLoggin" label="Salir" @click="LogOut" />
       </q-toolbar>
-      <div v-if="cantidadAsignaciones > 0 && isLoggin" class="bg-blue-9">
+      <!-- <div v-if="cantidadAsignaciones > 0 && isLoggin" class="bg-blue-9">
         <q-scroll-area style="height: 60px">
           <div class="row no-wrap q-gutter-md q-px-md justify-center">
             <AsignacionesItemBar
@@ -34,7 +34,7 @@
             />
           </div>
         </q-scroll-area>
-      </div>
+      </div> -->
     </q-header>
 
     <q-drawer v-model="drawerOpen" bordered overlay elevated class="bg-blue-9">
@@ -61,7 +61,7 @@ export default defineComponent({
 
   components: {
     EssentialLink,
-    AsignacionesItemBar,
+    //AsignacionesItemBar,
   },
 
   setup() {

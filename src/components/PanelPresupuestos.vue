@@ -136,7 +136,7 @@
                   >
                     <q-btn color="orange" round size="13px" @click.stop=""
                       >+
-                      <q-popup-proxy class="form-dialog"
+                      <q-popup-proxy style="border-radius: 16px"
                         ><q-card class="form-dialog" style="border-radius: 16px"
                           ><div class="column items-strech">
                             <q-card-section class="header-form-dialog"
@@ -176,10 +176,18 @@
                                 class="btn-form-dialog"
                                 v-close-popup
                                 label="Cancelar"
+                                @click="resetIngreso()"
                               />
                               <q-btn
+                                :disable="
+                                  descripcion.trim().toLowerCase().length < 1 ||
+                                  importe < 1 ||
+                                  tipo.trim().length < 0
+                                "
+                                v-close-popup
                                 class="btn-form-dialog"
                                 label="Guardar"
+                                @click="agregarIngreso()"
                               /></div></q-card-section></q-card></q-popup-proxy
                     ></q-btn>
                   </div>
@@ -246,7 +254,7 @@
                   style="font-size: 12px; min-height: 25px; max-height: 25px"
                 >
                   <q-item-section style="min-width: 30%; max-width: 30%"
-                    >${{ ingreso.importe }}</q-item-section
+                    >${{ ingreso.importe.toFixed(2) }}</q-item-section
                   >
                   <q-item-section
                     style="
@@ -269,7 +277,14 @@
                     style="width: 40px; padding: 0"
                     ><div class="row no-wrap justify-center">
                       <q-btn size="xs" flat dense round icon="mode_edit" />
-                      <q-btn size="xs" flat dense round icon="delete" /></div
+                      <q-btn
+                        size="xs"
+                        flat
+                        dense
+                        round
+                        icon="delete"
+                        @click="eliminarIngreso(ingreso.descripcion)"
+                      /></div
                   ></q-item-section>
                 </q-item>
               </q-list>
@@ -281,7 +296,7 @@
     <q-card
       id="headAsignaciones"
       class="vertical-top q-pa-none q-ma-none q-mt-sm"
-      style="width: 100%; position: sticky; top: 120px; z-index: 1000"
+      style="width: 100%; position: sticky; top: 59px; z-index: 1000"
     >
       <q-card-section class="q-px-xs q-py-none">
         <div class="row no-wrap">
@@ -309,8 +324,107 @@
                     class="q-ml-sm"
                     style="position: absolute; right: -4px"
                   >
-                    <q-btn color="orange" round size="13px" @click.stop=""
-                      >+
+                    <q-btn
+                      color="orange"
+                      label="+"
+                      round
+                      size="13px"
+                      @click.stop=""
+                      ><q-popup-proxy style="border-radius: 16px"
+                        ><q-card class="form-dialog" style="border-radius: 16px"
+                          ><div class="column items-strech">
+                            <q-card-section class="header-form-dialog"
+                              >Nueva Asignación</q-card-section
+                            >
+                            <q-separator />
+                            <q-card-section
+                              class="q-card-section-form-dialog q-mt-sm"
+                              ><q-input
+                                class="field-form-dialog text-capitalize"
+                                v-model="asignacionNombre"
+                                label="Nombre"
+                              ></q-input
+                            ></q-card-section>
+                            <q-card-section class="q-card-section-form-dialog"
+                              ><q-input
+                                class="field-form-dialog"
+                                v-model="asignacionImporte"
+                                prefix="$"
+                                mask="#.##"
+                                fill-mask="0"
+                                reverse-fill-mask
+                                label="Asignado"
+                            /></q-card-section>
+                            <q-card-section
+                              class="field-form-dialog q-mx-sm q-py-sm"
+                            >
+                              <div
+                                class="row justify-start"
+                                style="font-size: 12px"
+                              >
+                                <div>Disponible</div>
+                                <div class="q-ml-md">
+                                  ${{ importeSinAsignar.toFixed(2) }}
+                                </div>
+                              </div>
+                              <q-slider
+                                class="q-px-sm"
+                                v-model="slideNuevaAsignacion"
+                                :min="0"
+                                :max="100"
+                              />
+                            </q-card-section>
+                            <q-card-section class="q-card-section-form-dialog">
+                              <div class="q-ml-sm q-my-sm">Categorias</div>
+                              <div class="row">
+                                <div class="row">
+                                  <q-chip
+                                    class="text-capitalize"
+                                    v-for="cat in asignacionCategorias"
+                                    :key="cat.index"
+                                    size="sm"
+                                    clickable
+                                    @click="eliminarCategoriaSeleccionada(cat)"
+                                    >{{ cat.nombre }}
+                                  </q-chip>
+                                </div>
+                                <q-chip size="sm" clickable
+                                  ><q-menu fit
+                                    ><q-list
+                                      ><q-item
+                                        class="text-capitalize"
+                                        clickable
+                                        v-for="item in categorias"
+                                        :key="item.index"
+                                        :disable="item.disable"
+                                        @click="cambiarEstado(item)"
+                                      >
+                                        <q-item-section>{{
+                                          item.nombre
+                                        }}</q-item-section>
+                                      </q-item></q-list
+                                    ></q-menu
+                                  >+</q-chip
+                                >
+                              </div>
+                            </q-card-section>
+                          </div>
+                          <q-card-section
+                            ><div class="row justify-center q-gutter-sm">
+                              <q-btn
+                                class="btn-form-dialog"
+                                v-close-popup
+                                label="Cancelar"
+                                @click="resetNuevaAsignacion()"
+                              />
+                              <q-btn
+                                v-close-popup
+                                class="btn-form-dialog"
+                                label="Guardar"
+                                :disable="asignacionNombre.trim().length < 1"
+                                @click="agregarAsignaciones()"
+                              /></div></q-card-section></q-card
+                      ></q-popup-proxy>
                     </q-btn>
                   </div>
                 </div>
@@ -323,30 +437,60 @@
           >
             <div class="div-indicator-sm column q-ml-xs" style="width: 100%">
               <div style="font-size: 9px">Asignado</div>
-              <div style="font-size: 10px">${{ totalAsignado }}</div>
+              <div style="font-size: 10px">${{ totalAsignado.toFixed(2) }}</div>
             </div>
             <div
               class="div-indicator-sm column q-ma-none q-ml-sm q-mr-xs"
               style="width: 100%"
             >
               <div style="font-size: 9px">Sin asignar</div>
-              <div style="font-size: 10px">${{ importeSinAsignar }}</div>
+              <div style="font-size: 10px">
+                ${{ importeSinAsignar.toFixed(2) }}
+              </div>
             </div>
           </div>
         </div>
       </q-card-section>
     </q-card>
-    <div class="row justify-between items-start" style="width: 100%">
+    <div
+      v-if="editar"
+      class="row justify-between items-start"
+      style="width: 100%"
+    >
       <CardAsignacionesMobile
         class="card-asignaciones q-pa-none q-ma-none q-mt-sm q-mb-none"
         v-for="asignacion in asignaciones"
         :key="asignacion.index"
-        :nombre="asignacion.nombre"
-        :importe="Number(asignacion.importe)"
-        :totalGastos="Number(asignacion.totalGastos)"
-        :categorias="asignacion.categorias"
-        :totalIngresos="props.totalIngresos"
-        :gastos="asignacion.gastos"
+        :pNombre="asignacion.nombre"
+        :pImporteAsignado="Number(asignacion.importe)"
+        :pTotalGastos="Number(asignacion.totalGastos)"
+        :pCategoriasSeleccionadas="asignacion.categorias"
+        :pCategorias="categorias"
+        :pTotalIngresos="props.totalIngresos"
+        :pGastos="asignacion.gastos"
+        :pAsignaciones="asignaciones"
+        :pEditar="true"
+        :pSinAsignar="importeSinAsignar"
+        @eliminarAsignacion="
+          (nombreAsignacion) => eliminarAsignacion(nombreAsignacion)
+        "
+      />
+    </div>
+    <div v-else class="row justify-between items-start" style="width: 100%">
+      <CardAsignacionesMobile
+        class="card-asignaciones q-pa-none q-ma-none q-mt-sm q-mb-none"
+        v-for="asignacion in asignaciones"
+        :key="asignacion.index"
+        :pNombre="asignacion.nombre"
+        :pImporteAsignado="Number(asignacion.importe)"
+        :pTotalGastos="Number(asignacion.totalGastos)"
+        :pCategoriasSeleccionadas="asignacion.categorias"
+        :pCategorias="categorias"
+        :pTotalIngresos="props.totalIngresos"
+        :pGastos="asignacion.gastos"
+        :pAsignaciones="asignaciones"
+        :pEditar="false"
+        :pSinAsignar="importeSinAsignar"
       />
     </div>
     <q-page-sticky v-if="editar" position="bottom" :offset="[0, 18]">
@@ -359,6 +503,7 @@
         color="primary"
         label="Guardar"
         style="box-shadow: 0px 6px 14px rgba(0, 0, 0, 0.4)"
+        @click="agregarNuevoPresupuesto()"
       />
       <q-btn
         class="q-ml-sm"
@@ -380,26 +525,33 @@ import { ref, computed, watch } from "vue";
 import CardAsignacionesMobile from "../components/CardAsignacionesMobile.vue";
 import { usePresupuestosStore } from "src/stores/PresupuestosStore";
 import { useConfigStore } from "src/stores/ConfigStore";
+import { useAuthStore } from "src/stores/AuthStore";
+import { useNotifications } from "src/composables/useNotifications";
+
+const { showError, showSuccess } = useNotifications();
 
 const configStore = useConfigStore();
 const storePresupuestos = usePresupuestosStore();
+const storeUser = useAuthStore();
 const visibleListaIngresos = ref(true);
-const importe = ref(1000.0);
+const importe = ref(0.0);
 const descripcion = ref("");
 const tipos = ref(["Fijo", "Único"]);
-const tipo = ref();
+const tipo = ref("Fijo");
 ////
 
 const props = defineProps({
-  pMes: String,
+  pMes: Object,
   pAño: Number,
   fecha: Date,
   totalIngresos: Number,
   totalGastos: Number,
-  ingresos: Array,
+  pIngresos: Array,
   asignaciones: Array,
   pEditar: Boolean,
 });
+
+const ingresos = ref(props.pIngresos);
 
 const editar = ref(props.pEditar);
 
@@ -426,11 +578,11 @@ const totalAsignado = computed(() => {
     (acumulador, asignacion) => acumulador + asignacion.importe,
     0
   );
-  return Number(total.toFixed(2));
+  return Number(total);
 });
 const importeSinAsignar = computed(() => {
   let total = props.totalIngresos - totalAsignado.value;
-  return Number(total.toFixed(2));
+  return Number(total);
 });
 
 const eliminarPresupuesto = async () => {
@@ -438,6 +590,31 @@ const eliminarPresupuesto = async () => {
 };
 
 ////REFERIDO A EDITAR PRESUPUESTO
+
+const visibleSliderAsignacion = ref(false);
+const asignacionNombre = ref("");
+const asignacionImporte = ref(0);
+const asignacionCategorias = ref([]);
+
+const categorias = computed(() => {
+  const categoriasAux = storeUser.categorias.map((categoria) => ({
+    ...categoria,
+    disable: existeCategoriaSeleccionada(categoria),
+  }));
+  return categoriasAux;
+});
+
+const existeCategoriaSeleccionada = (pCategoria) => {
+  var resultado = false;
+  asignaciones.value.find((asignacion) => {
+    asignacion.categorias.find((categoria) => {
+      if (categoria.id === pCategoria.id) {
+        resultado = true;
+      }
+    });
+  });
+  return resultado;
+};
 
 const fechaActual = new Date();
 const años = ref([
@@ -464,4 +641,154 @@ const meses = computed(() => {
 watch(año, () => {
   mes.value = "";
 });
+
+const cambiarEstado = (categoria) => {
+  if (categoria.disable === true) {
+    eliminarCategoriaSeleccionada(categoria);
+  } else {
+    asignacionCategorias.value.push(categoria);
+    categoria.disable = true;
+  }
+};
+
+const eliminarCategoriaSeleccionada = (categoriaParametro) => {
+  const indexAEliminar = asignacionCategorias.value.findIndex(
+    (cat) => cat.id === categoriaParametro.id
+  );
+  asignacionCategorias.value.splice(indexAEliminar, 1);
+  categorias.value.find((cat) => {
+    if (cat.id === categoriaParametro.id) {
+      cat.disable = false;
+    }
+  });
+};
+
+const agregarAsignaciones = () => {
+  const nuevaAsignacion = () => {
+    asignaciones.value.unshift({
+      nombre: asignacionNombre.value.toLowerCase(),
+      categorias: asignacionCategorias.value,
+      importe: Number(asignacionImporte.value),
+      totalGastos: Number(0).toFixed(2),
+    });
+    resetNuevaAsignacion();
+    slideNuevaAsignacion.value = 0;
+    console.table(asignaciones.value);
+  };
+  if (asignaciones.value.length < 1) {
+    nuevaAsignacion();
+  } else {
+    let sinNombre = asignaciones.value.find((asignacion) => {
+      if (asignacion.nombre === asignacionNombre.value.toLowerCase()) {
+        return true;
+      }
+    });
+    if (sinNombre) {
+      showError(
+        "Error:",
+        "Ya existe una asignación con el mismo nombre",
+        "Al crear nueva asignación"
+      );
+    } else {
+      nuevaAsignacion();
+    }
+  }
+};
+
+const resetNuevaAsignacion = () => {
+  asignacionNombre.value = "";
+  asignacionImporte.value = 0;
+  asignacionCategorias.value = [];
+};
+
+const slideNuevaAsignacion = ref(0);
+
+watch(slideNuevaAsignacion, () => {
+  let auxTotal = 0;
+  auxTotal = Number(importeSinAsignar.value * slideNuevaAsignacion.value) / 100;
+  asignacionImporte.value = auxTotal.toFixed(2);
+});
+
+const eliminarAsignacion = (nombre) => {
+  let index = null;
+  let auxAsignacion = [];
+  asignaciones.value.find((asignacion) => {
+    if (asignacion.nombre === nombre) {
+      index = asignaciones.value.indexOf(asignacion);
+      auxAsignacion = asignacion;
+    }
+  });
+  auxAsignacion.categorias.forEach((categoria) => {
+    categorias.value.forEach((cat) => {
+      if (cat.id === categoria.id) {
+        cat.disable = false;
+      }
+    });
+  });
+  asignaciones.value.splice(index, 1);
+};
+
+const agregarNuevoPresupuesto = () => {
+  let sinNombre = asignaciones.value.find((asignacion) => {
+    if (asignacion.nombre === "") {
+      return true;
+    }
+  });
+  if (sinNombre) {
+    showError(
+      "Error:",
+      "No se puede guardar con asignaciones sin nombre",
+      "Al guardar un presupuesto"
+    );
+  } else {
+    var pFecha = new Date(año.value, mes.value.id, 1);
+    storePresupuestos.agregarPresupuesto(
+      pFecha,
+      ingresos.value,
+      asignaciones.value
+    );
+  }
+};
+const agregarIngreso = () => {
+  let auxYaExiste = false;
+  ingresos.value.forEach((ingreso) => {
+    if (
+      ingreso.descripcion.trim().toLowerCase() ==
+      descripcion.value.trim().toLowerCase()
+    ) {
+      auxYaExiste = true;
+    }
+  });
+  if (auxYaExiste) {
+    showError(
+      "Error:",
+      "Ya existe un ingreso con la misma descripción",
+      "Al agregar nuevo ingreso"
+    );
+  } else {
+    let auxIngreso = {
+      importe: Number(importe.value),
+      descripcion: descripcion.value,
+      tipo: tipo.value,
+    };
+    ingresos.value.push(auxIngreso);
+    resetIngreso();
+  }
+};
+
+const resetIngreso = () => {
+  importe.value = 0;
+  descripcion.value = "";
+  tipo.value = "Fijo";
+};
+
+const eliminarIngreso = (pDescripcion) => {
+  let index = null;
+  ingresos.value.find((ingreso) => {
+    if (ingreso.descripcion === pDescripcion) {
+      index = ingresos.value.indexOf(ingreso);
+    }
+  });
+  ingresos.value.splice(index, 1);
+};
 </script>

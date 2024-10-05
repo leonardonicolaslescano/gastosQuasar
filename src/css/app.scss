@@ -31,6 +31,13 @@ div {
 .form-dialog {
   border-radius: 20px;
   width: 240px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2); /* Sombra */
+}
+
+.form-dialog-popup {
+  border-radius: 20px;
+  width: 180px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2); /* Sombra */
 }
 
 .header-form-dialog {
@@ -41,12 +48,25 @@ div {
   text-align: center;
 }
 
+.field-less-shadow {
+  border: 1px solid #e1e1e1; /* Color del borde */
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra */
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
 .field-form-dialog {
   border: 1px solid #a4a4a4; /* Color del borde */
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra */
   padding-left: 8px;
   padding-right: 8px;
+}
+.field-form-dialog-not-padding {
+  border: 1px solid #a4a4a4; /* Color del borde */
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra */
 }
 
 .q-card-section-form-dialog {
@@ -58,6 +78,7 @@ div {
   color: white;
   border-radius: 12px;
   font-size: small;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra */
 }
 
 .div-indicator-sm {
