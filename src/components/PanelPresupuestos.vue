@@ -12,10 +12,9 @@
           ><q-list
             ><q-item clickable v-close-popup @click="editar = true"
               >Editar</q-item
-            ><q-item clickable v-close-popup>Duplicar</q-item
             ><q-item clickable
-              >Eliminar<q-popup-proxy class="form-dialog"
-                ><q-card
+              >Eliminar<q-popup-proxy
+                ><q-card class="form-dialog"
                   ><q-card-section class="card-title"
                     >¿Confirma eliminar presupuesto?</q-card-section
                   ><q-card-actions class="row no-wrap justify-evenly"
@@ -28,7 +27,7 @@
                       >Cancelar</q-btn
                     ></q-card-actions
                   ></q-card
-                >></q-popup-proxy
+                ></q-popup-proxy
               ></q-item
             ></q-list
           ></q-menu
@@ -153,7 +152,8 @@
                                 reverse-fill-mask
                                 label="Importe"
                             /></q-card-section>
-                            <q-card-section class="q-card-section-form-dialog"
+                            <q-card-section
+                              class="q-card-section-form-dialog text-capitalize"
                               ><q-input
                                 class="field-form-dialog"
                                 v-model="descripcion"
@@ -257,6 +257,7 @@
                     >${{ ingreso.importe.toFixed(2) }}</q-item-section
                   >
                   <q-item-section
+                    class="text-capitalize"
                     style="
                       min-width: 10%;
                       max-width: 40%;
@@ -276,16 +277,97 @@
                     side
                     style="width: 40px; padding: 0"
                     ><div class="row no-wrap justify-center">
-                      <q-btn size="xs" flat dense round icon="mode_edit" />
                       <q-btn
                         size="xs"
                         flat
                         dense
                         round
-                        icon="delete"
-                        @click="eliminarIngreso(ingreso.descripcion)"
-                      /></div
-                  ></q-item-section>
+                        icon="mode_edit"
+                        @click="
+                          cargarCamposEditarIngreso(
+                            ingreso.importe,
+                            ingreso.descripcion,
+                            ingreso.tipo
+                          )
+                        "
+                        ><q-popup-proxy style="border-radius: 16px"
+                          ><q-card
+                            class="form-dialog"
+                            style="border-radius: 16px"
+                            ><div class="column items-strech">
+                              <q-card-section class="header-form-dialog"
+                                >Modificar ingreso</q-card-section
+                              >
+                              <q-separator />
+                              <q-card-section class="q-card-section-form-dialog"
+                                ><q-input
+                                  class="field-form-dialog"
+                                  v-model="importe"
+                                  prefix="$"
+                                  mask="#.##"
+                                  fill-mask="0"
+                                  reverse-fill-mask
+                                  label="Importe"
+                              /></q-card-section>
+                              <q-card-section
+                                class="q-card-section-form-dialog text-capitalize"
+                                ><q-input
+                                  class="field-form-dialog"
+                                  v-model="descripcion"
+                                  label="Descripción"
+                                ></q-input
+                              ></q-card-section>
+                              <q-card-section class="q-card-section-form-dialog"
+                                ><q-select
+                                  class="field-form-dialog"
+                                  v-model="tipo"
+                                  :options="tipos"
+                                  label="Tipo"
+                                  style=""
+                                ></q-select
+                              ></q-card-section>
+                            </div>
+                            <q-card-section
+                              ><div class="row justify-center q-gutter-sm">
+                                <q-btn
+                                  class="btn-form-dialog"
+                                  v-close-popup
+                                  label="Cancelar"
+                                  @click="resetIngreso()"
+                                />
+                                <q-btn
+                                  :disable="
+                                    descripcion.trim().toLowerCase().length <
+                                      1 ||
+                                    importe < 1 ||
+                                    tipo.trim().length < 0
+                                  "
+                                  v-close-popup
+                                  class="btn-form-dialog"
+                                  label="Guardar"
+                                  @click="modificarIngreso()"
+                                /></div></q-card-section></q-card></q-popup-proxy
+                      ></q-btn>
+                      <q-btn size="xs" flat dense round icon="delete"
+                        ><q-popup-proxy
+                          ><q-card class="form-dialog"
+                            ><q-card-section class="card-title"
+                              >¿Confirma eliminar ingreso?</q-card-section
+                            ><q-card-actions class="row no-wrap justify-evenly"
+                              ><q-btn
+                                size="sm"
+                                color="primary"
+                                @click="eliminarIngreso(ingreso.descripcion)"
+                                >Confirmar</q-btn
+                              ><q-btn size="sm" color="primary" v-close-popup
+                                >Cancelar</q-btn
+                              ></q-card-actions
+                            ></q-card
+                          ></q-popup-proxy
+                        ></q-btn
+                      >
+                    </div></q-item-section
+                  >
                 </q-item>
               </q-list>
             </div>
@@ -502,6 +584,7 @@
         size="md"
         color="primary"
         label="Guardar"
+        :disable="mes.length < 1"
         style="box-shadow: 0px 6px 14px rgba(0, 0, 0, 0.4)"
         @click="agregarNuevoPresupuesto()"
       />
@@ -514,7 +597,7 @@
         color="warning"
         label="Cancelar"
         style="box-shadow: 0px 6px 14px rgba(0, 0, 0, 0.4)"
-        @click="editar = false"
+        @click="cancelarEdicion()"
       />
     </q-page-sticky>
   </div>
@@ -533,7 +616,7 @@ const { showError, showSuccess } = useNotifications();
 const configStore = useConfigStore();
 const storePresupuestos = usePresupuestosStore();
 const storeUser = useAuthStore();
-const visibleListaIngresos = ref(true);
+const visibleListaIngresos = ref(false);
 const importe = ref(0.0);
 const descripcion = ref("");
 const tipos = ref(["Fijo", "Único"]);
@@ -544,18 +627,32 @@ const props = defineProps({
   pMes: Object,
   pAño: Number,
   fecha: Date,
-  totalIngresos: Number,
+  pTotalIngresos: Number,
   totalGastos: Number,
   pIngresos: Array,
   asignaciones: Array,
   pEditar: Boolean,
 });
 
-const ingresos = ref(props.pIngresos);
+//const ingresos = ref(props.pIngresos);
+const ingresos = ref(
+  props.pIngresos.map((data) => ({
+    ...data,
+  }))
+);
+
+const totalIngresos = computed(() => {
+  let auxTotal = 0;
+  ingresos.value.forEach((ingreso) => {
+    auxTotal = auxTotal + Number(ingreso.importe);
+  });
+  console.log("en computed ingresos: " + auxTotal);
+  return auxTotal;
+});
 
 const editar = ref(props.pEditar);
 
-const emit = defineEmits(["presupuestoEliminado"]);
+const emit = defineEmits(["presupuestoEliminado", "cancelarEdicion"]);
 
 const asignaciones = ref(
   props.asignaciones.map((data) => ({
@@ -564,12 +661,12 @@ const asignaciones = ref(
 );
 
 const restante = computed(() => {
-  return Number(props.totalIngresos - props.totalGastos);
+  return Number(totalIngresos.value - props.totalGastos);
 });
 
 const porcentajeGastado = computed(() => {
   let porcentaje =
-    Number(props.totalGastos / props.totalIngresos).toFixed(2) * 100;
+    Number(props.totalGastos / totalIngresos.value).toFixed(2) * 100;
   return Number(porcentaje.toFixed(2));
 });
 
@@ -581,7 +678,7 @@ const totalAsignado = computed(() => {
   return Number(total);
 });
 const importeSinAsignar = computed(() => {
-  let total = props.totalIngresos - totalAsignado.value;
+  let total = totalIngresos.value - totalAsignado.value;
   return Number(total);
 });
 
@@ -595,6 +692,7 @@ const visibleSliderAsignacion = ref(false);
 const asignacionNombre = ref("");
 const asignacionImporte = ref(0);
 const asignacionCategorias = ref([]);
+const descripcionActual = ref(""); //Para buscar el ingreso al modificar la descripción, y que no se usa ID
 
 const categorias = computed(() => {
   const categoriasAux = storeUser.categorias.map((categoria) => ({
@@ -780,6 +878,7 @@ const resetIngreso = () => {
   importe.value = 0;
   descripcion.value = "";
   tipo.value = "Fijo";
+  descripcionActual.value = "";
 };
 
 const eliminarIngreso = (pDescripcion) => {
@@ -790,5 +889,57 @@ const eliminarIngreso = (pDescripcion) => {
     }
   });
   ingresos.value.splice(index, 1);
+};
+
+const cargarCamposEditarIngreso = (pImporte, pDescripcion, pTipo) => {
+  importe.value = pImporte.toFixed(2);
+  descripcion.value = pDescripcion;
+  tipo.value = pTipo;
+  descripcionActual.value = pDescripcion;
+};
+
+const modificarIngreso = () => {
+  let auxYaExiste = false;
+  ingresos.value.forEach((ingreso) => {
+    if (
+      ingreso.descripcion.trim().toLowerCase() !=
+        descripcionActual.value.trim().toLowerCase() &&
+      ingreso.descripcion.trim().toLowerCase() ==
+        descripcion.value.trim().toLowerCase()
+    ) {
+      auxYaExiste = true;
+    }
+  });
+  if (auxYaExiste) {
+    showError(
+      "Error:",
+      "Ya existe un ingreso con la misma descripción",
+      "Al agregar nuevo ingreso"
+    );
+  } else {
+    ingresos.value.forEach((ingreso) => {
+      if (
+        ingreso.descripcion.trim().toLowerCase() ==
+        descripcionActual.value.trim().toLowerCase()
+      ) {
+        ingreso.importe = Number(importe.value);
+        ingreso.descripcion = descripcion.value.toLowerCase();
+        ingreso.tipo = tipo.value;
+      }
+    });
+    resetIngreso();
+  }
+};
+
+const cancelarEdicion = () => {
+  ingresos.value = props.pIngresos.map((data) => ({
+    ...data,
+  }));
+  asignaciones.value = props.asignaciones.map((data) => ({
+    ...data,
+  }));
+  mes.value = props.pMes;
+  año.value = props.pAño;
+  editar.value = false;
 };
 </script>

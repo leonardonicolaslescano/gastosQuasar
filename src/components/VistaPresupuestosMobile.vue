@@ -52,7 +52,7 @@
           :pMes="presupuestoActual.mes"
           :pAño="presupuestoActual.año"
           :fecha="presupuestoActual.fecha.toDate()"
-          :totalIngresos="presupuestoActual.totalIngresos"
+          :pTotalIngresos="presupuestoActual.totalIngresos"
           :totalGastos="presupuestoActual.totalGastos"
           :pIngresos="presupuestoActual.ingresos"
           :asignaciones="presupuestoActual.asignaciones"
@@ -70,7 +70,7 @@
             :pMes="presupuesto.mes"
             :pAño="presupuesto.año"
             :fecha="presupuesto.fecha.toDate()"
-            :totalIngresos="presupuesto.totalIngresos"
+            :pTotalIngresos="presupuesto.totalIngresos"
             :totalGastos="presupuesto.totalGastos"
             :pIngresos="presupuesto.ingresos"
             :asignaciones="presupuesto.asignaciones"
@@ -79,7 +79,25 @@
           />
         </transition>
       </div>
+      <transition
+        leave-active-class="animated slideOutLeft faster"
+        enter-active-class="animated slideInRight    "
+      >
+        <PanelPresupuestos
+          v-if="tab == 'nuevo'"
+          :pMes="configStore.meses[fechaProximoMes.getMonth()]"
+          :pAño="fechaProximoMes.getFullYear()"
+          :fecha="fechaProximoMes"
+          :pTotalIngresos="0"
+          :totalGastos="0"
+          :pIngresos="[]"
+          :asignaciones="[]"
+          :pEditar="true"
+          @presupuestoEliminado="reiniciarTab()"
+        />
+      </transition>
     </div>
+
     <q-inner-loading
       :showing="!visible"
       label="Actualizando..."
@@ -115,6 +133,21 @@ const tab = ref("actual");
 
 const fechaActual = new Date();
 const mesActual = configStore.meses[fechaActual.getMonth()];
+
+////para campos predefinidos al crear presupuesto
+const fechaProximoMes = computed(() => {
+  let auxProximoMes = null;
+  if (fechaActual.getMonth() == 11)
+    auxProximoMes = new Date(fechaActual.getFullYear() + 1, 0, 1);
+  else {
+    auxProximoMes = new Date(
+      fechaActual.getFullYear(),
+      fechaActual.getMonth() + 1,
+      1
+    );
+  }
+  return auxProximoMes;
+});
 
 const presupuestoActual = computed(() => {
   return presupuestoStore.presupuestoActual;

@@ -297,7 +297,7 @@
                 box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
               "
             >
-              <q-list dense class="q-pb-sm">
+              <q-list separator dense class="q-pb-sm">
                 <q-item
                   style="font-size: 9px; min-height: 25px; max-height: 25px"
                 >
@@ -313,16 +313,15 @@
                     >Categoria</q-item-section
                   >
 
-                  <q-item-section
-                    class="q-ml-sm"
-                    side
-                    style="width: 40px"
-                  ></q-item-section>
+                  <q-item-section class="q-ml-sm" style="width: 40px"
+                    >Descripción</q-item-section
+                  >
                 </q-item>
                 <q-item
                   v-for="gasto in gastos"
                   :key="gasto.index"
-                  style="font-size: 12px; min-height: 25px; max-height: 25px"
+                  class="row no-wrap"
+                  style="font-size: 12px; min-height: 25px; max-height: 200px"
                 >
                   <q-item-section
                     style="min-width: 15%; max-width: 20%; font-size: 10px"
@@ -347,14 +346,10 @@
                   >
 
                   <q-item-section
-                    class="q-ml-sm"
-                    side
-                    style="width: 40px; padding: 0"
-                    ><div class="row no-wrap justify-center">
-                      <q-btn size="xs" flat dense round icon="info" />
-                      <q-btn size="xs" flat dense round icon="mode_edit" />
-                      <q-btn size="xs" flat dense round icon="delete" /></div
-                  ></q-item-section>
+                    class="q-pl-sm text-capitalize"
+                    style="min-width: 15%; max-width: 30%; font-size: 10px"
+                    >{{ gasto.descripcion }}</q-item-section
+                  >
                 </q-item>
               </q-list>
             </div>

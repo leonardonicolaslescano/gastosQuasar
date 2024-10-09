@@ -155,6 +155,7 @@ export const usePresupuestosStore = defineStore("presupuestosStore", () => {
                   categoriaIcono: userStore.iconoCategoriaPorId(
                     gasto.categoriaId
                   ),
+                  descripcion: gasto.descripcion,
                 });
               }
             });
@@ -218,7 +219,7 @@ export const usePresupuestosStore = defineStore("presupuestosStore", () => {
         fechaActual.getMonth() + 1,
         0
       );
-      const fechaHasta = new Date(fechaActual.getFullYear() + 1, 1, 0);
+      const fechaHasta = new Date(fechaActual.getFullYear() + 2, 1, 0);
 
       const userDocRef = await doc(db, "usuarios", userStore.uId);
       const presupuestosCollection = collection(userDocRef, "presupuestos");
@@ -288,6 +289,7 @@ export const usePresupuestosStore = defineStore("presupuestosStore", () => {
                   categoriaIcono: userStore.iconoCategoriaPorId(
                     gasto.categoriaId
                   ),
+                  descripcion: gasto.descripcion,
                 });
               }
             });
