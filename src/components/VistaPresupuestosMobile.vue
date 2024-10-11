@@ -2,10 +2,7 @@
   <div class="column items-start" style="width: 95%">
     <div class="titulo q-pa-md text-h6">Presupuestos</div>
     <div class="column no-wrap" v-if="visible" style="width: 100%">
-      <div
-        class="row no-wrap"
-        style="width: 100%; overflow-x: auto; white-space: nowrap"
-      >
+      <div class="row no-wrap q-pb-sm scroll-container">
         <div v-if="presupuestoActual.activo">
           <div
             :class="

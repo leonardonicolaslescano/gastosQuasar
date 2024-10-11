@@ -49,10 +49,13 @@
           <div id="campoCategoria" class="col">
             <q-select
               v-model="categoria"
-              :options="listaCategorias"
+              :options="options"
               :option-label="(item) => item.nombre"
               label="Categoria"
               class="text-h6 text-capitalize"
+              @filter="filterFn"
+              use-input
+              ref="selectRef"
             >
               <template v-slot:option="scope">
                 <q-item v-bind="scope.itemProps">
@@ -68,6 +71,61 @@
                     <q-item-label class="text-capitalize">{{
                       scope.opt.nombre
                     }}</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </template>
+              <template v-slot:no-option="scope">
+                <q-item style="background-color: rgba(133, 132, 132, 0.7)">
+                  <q-item-section class="text-grey">
+                    <div
+                      class="column items-center"
+                      style="background-color: white; border-radius: 16px"
+                    >
+                      <div class="q-mb-sm text_subtitle1">Nueva categoria</div>
+                      <div class="row no-wrap q-mb-md">
+                        <div class="column">
+                          <div>Icono</div>
+                          <q-btn
+                            color="primary"
+                            :icon="iconoNuevaCategoria"
+                            style="border-radius: 10px"
+                          >
+                            <q-menu
+                              class="row"
+                              style="
+                                width: 280px;
+                                border-radius: 16px;
+                                background-color: rgba(133, 132, 132, 0.7);
+                              "
+                            >
+                              <div
+                                v-for="icono in configStore.icons"
+                                :key="icono"
+                              >
+                                <q-btn
+                                  color="primary"
+                                  :icon="icono"
+                                  @click="iconoNuevaCategoria = icono"
+                                ></q-btn>
+                              </div>
+                            </q-menu>
+                          </q-btn>
+                        </div>
+                        <div class="column justify-end q-ml-xl">
+                          <div></div>
+                          <q-btn
+                            v-close-popup
+                            class="btn-form-dialog"
+                            label="Agregar"
+                            @click="
+                              () => {
+                                nuevaCategoria(scope.inputValue);
+                              }
+                            "
+                          />
+                        </div>
+                      </div>
+                    </div>
                   </q-item-section>
                 </q-item>
               </template>
@@ -420,9 +478,13 @@
 import { computed, ref, watch } from "vue";
 import { useAuthStore } from "src/stores/AuthStore";
 import { date } from "quasar";
+import { useConfigStore } from "src/stores/ConfigStore";
+
+const selectRef = ref(null);
 
 //Stores
 const store = useAuthStore();
+const configStore = useConfigStore();
 
 //Visibilidad de los dialogos
 const visibleDiv = ref(true);
@@ -561,4 +623,37 @@ const formatoCalendario = ref({
   ],
   daysShort: ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"],
 });
+
+const options = ref(listaCategorias.value);
+
+function filterFn(val, update) {
+  if (val === "") {
+    update(() => {
+      options.value = listaCategorias.value;
+    });
+    return;
+  }
+
+  update(() => {
+    const needle = val.toLowerCase();
+    options.value = listaCategorias.value.filter((v) =>
+      v.nombre.toLowerCase().includes(needle)
+    );
+  });
+}
+
+const iconoNuevaCategoria = ref("home");
+
+const nuevaCategoria = async (pNombre) => {
+  await store.agregarCategoria(
+    iconoNuevaCategoria.value,
+    pNombre.toLowerCase()
+  );
+  listaCategorias.value.forEach((cat) => {
+    if (cat.nombre == pNombre) {
+      categoria.value = cat;
+    }
+  });
+  selectRef.value.updateInputValue("");
+};
 </script>
